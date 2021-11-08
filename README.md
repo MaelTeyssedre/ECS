@@ -1,2 +1,3 @@
-# ECS
-ECS for game development in C++
+# R-TYPE
+
+Work In Progress
