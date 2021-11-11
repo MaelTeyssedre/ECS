@@ -7,12 +7,14 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
     Registry registry(1);
     component::position_s pos = {50, 50};
-    component::velocity_s vel = {10, 10};
+    component::velocity_s vel = {1, 1};
     component::drawable_s sprite;
-    sprite.texture.loadFromFile("canard.png");
+    sprite.texture.loadFromFile("../canard.png");
     sprite.sprite.setTexture(sprite.texture, true);
     sprite.window = &window;
-    component::controllable_s ctrl = {};
+    sprite.sprite.setPosition(sf::Vector2f((float)pos.x, (float)pos.y));
+    sprite.sprite.setScale((float)0.3, (float)0.3);
+    component::controllable_s ctrl = {true};
     registry.registerComponent<component::position_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
     registry.registerComponent<component::velocity_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
     registry.registerComponent<component::drawable_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
@@ -26,8 +28,10 @@ int main() {
         while (window.pollEvent(event))
             if (event.type == sf::Event::Closed)
                 window.close();
-        window.clear(sf::Color::Yellow);
+        window.clear(sf::Color::Black);
         logging_system(registry);
+        control_system(registry);
+        position_system(registry);
         draw_system(registry);
         window.display();
     }
