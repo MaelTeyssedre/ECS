@@ -55,14 +55,14 @@
             }
 
             template <typename Function, class ...Components>
-            void addSystem(Function &&f, Components ...components) {
+            void addSystem(Function &&f, Components &&...components) {
                 _systems.push_back([&f, &components...](Registry &r) -> void {
                     f(r, components...);
                 });
             }
 
             template <typename Function, class ...Components>
-            void addSystem(Function const &f, Components ...components) {
+            void addSystem(Function const &f, Components &...components) {
                 _systems.push_back([&f, &components...](Registry &r) -> void {
                     f(r, components...);
                 });
