@@ -28,19 +28,10 @@ int main() {
     registry.addComponent<component::controllable_s>(registry.entityFromIndex(0), std::move(ctrl));
     registry.addComponent<component::drawable_s>(registry.entityFromIndex(0), std::move(sprite));
     // * addSystem
-    // registry.add_system<component::position_s, component::velocity_s>([](Registry &registry) -> void {
-    //         SparseArray<component::position_s> &positions {registry.getComponents<component::position_s>()};
-    //         SparseArray<component::velocity_s> &velocities {registry.getComponents<component::velocity_s>()};
-    //         for (size_t i = 0; i < positions.size() && i < velocities.size(); i++) {
-    //             const std::optional<component::position_s> &pos {positions[i]};
-    //             const std::optional<component::velocity_s> &vel {velocities[i]};
-    //             if (pos && vel)
-    //                 std::cerr << i << ": Position = { " << pos.value().x << ", " << pos.value().y << " }, Velocity = { " << vel.value().vx << ", " << vel.value().vy << " }" << std::endl;
-    //         }
-    // });
-    // registry.add_system(positionSystem);
-    // registry.add_system(controlSystem);
-    // registry.add_system(drawSystem);
+    registry.addSystem(loggingSystem, registry.getComponents<component::position_s>(), registry.getComponents<component::velocity_s>());
+    registry.addSystem(positionSystem, registry.getComponents<component::position_s>(), registry.getComponents<component::drawable_s>());
+    registry.addSystem(controlSystem, registry.getComponents<component::position_s>(), registry.getComponents<component::velocity_s>(), registry.getComponents<component::controllable_s>());
+    registry.addSystem(drawSystem, registry.getComponents<component::drawable_s>());
     // * mainLoop
     while (window.isOpen()) {
         sf::Event event;
@@ -48,11 +39,7 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         window.clear(sf::Color::Black);
-        // registry.run_system();
-        loggingSystem(registry);
-        positionSystem(registry);
-        controlSystem(registry);
-        drawSystem(registry);
+        registry.run_system();
         window.display();
     }
     return 0;

@@ -37,13 +37,13 @@ void Registry::killEntity(Entity const &e) {
 }
 
 bool Registry::isKilled(Entity const &e) {
-    for (auto i = 0; i < _killedEntities.size(); i++)
+    for (size_t i = 0; i < _killedEntities.size(); i++)
         if ((size_t)e == (size_t)_killedEntities[i])
             return true;
     return false;
 }
 
 void Registry::run_system() {
-    for (auto i = 0; i < _systems.size(); i++)
+    for (size_t i = 0; i < _systems.size(); i++)
         _systems[i](*this);
 }

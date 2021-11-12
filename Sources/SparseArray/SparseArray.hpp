@@ -21,16 +21,16 @@
 
             SparseArray() = default;
             SparseArray(SparseArray const &sparceArray) {
-                for (auto i = 0; i < sparceArray.size(); i++)
+                for (size_t i = 0; i < sparceArray.size(); i++)
                     _data.push_back(std::nullopt);
-                for (auto i = 0; i < sparceArray.size(); i++)
+                for (size_t i = 0; i < sparceArray.size(); i++)
                     _data[i] = sparceArray._data[i];
                 
             };
             SparseArray(SparseArray &&sparseArray) noexcept
                 : _data(std::move(sparseArray._data)) {}
             SparseArray(size_t nbEntity) {
-                for (auto i = 0; i < nbEntity; i++)
+                for (size_t i = 0; i < nbEntity; i++)
                     _data.push_back(std::nullopt);
             }
 

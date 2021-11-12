@@ -54,11 +54,19 @@
                 array.erase(from);
             }
 
-            template <class... Components, typename Function>
-            void add_system(Function &&f) {}
+            template <typename Function, class ...Components>
+            void addSystem(Function &&f, Components ...components) {
+                _systems.push_back([&f, &components...](Registry &r) -> void {
+                    f(r, components...);
+                });
+            }
 
-            template <class... Components, typename Function>
-            void add_system(Function const &f) {}
+            template <typename Function, class ...Components>
+            void addSystem(Function const &f, Components ...components) {
+                _systems.push_back([&f, &components...](Registry &r) -> void {
+                    f(r, components...);
+                });
+            }
 
         private:
             std::map<std::type_index, std::function<void(Registry &, Entity const &)>> _constructorArray;

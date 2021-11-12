@@ -1,9 +1,7 @@
 #include "components.hpp"
 #include "Registry.hpp"
 
-void loggingSystem(Registry &r) {
-    SparseArray<component::position_s> &positions = r.getComponents<component::position_s>();
-    SparseArray<component::velocity_s> &velocities = r.getComponents<component::velocity_s>();
+void loggingSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::velocity_s> &velocities) {
     for (size_t i = 0; i < positions.size() && i < velocities.size(); i++) {
         const std::optional<component::position_s> &pos = positions[i];
         const std::optional<component::velocity_s> &vel = velocities[i];
@@ -12,10 +10,7 @@ void loggingSystem(Registry &r) {
     }
 }
 
-void controlSystem(Registry &r) {
-    SparseArray<component::position_s> &positions = r.getComponents<component::position_s>();
-    SparseArray<component::velocity_s> &velocities = r.getComponents<component::velocity_s>();
-    SparseArray<component::controllable_s> &controllable = r.getComponents<component::controllable_s>();
+void controlSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::velocity_s> &velocities, SparseArray<component::controllable_s> &controllable) {
     for (size_t i = 0; i < positions.size() && i < velocities.size() && i < controllable.size(); i++) {
         std::optional<component::position_s> &pos = positions[i];
         std::optional<component::velocity_s> &vel = velocities[i];
@@ -33,8 +28,7 @@ void controlSystem(Registry &r) {
     }
 }
 
-void drawSystem(Registry &r) {
-    SparseArray<component::drawable_s> &drawables = r.getComponents<component::drawable_s>();
+void drawSystem(Registry &r, SparseArray<component::drawable_s> &drawables) {
     for (size_t i = 0; i < drawables.size(); i++) {
         std::optional<component::drawable_s> &draw = drawables[i];
         if (draw)
@@ -42,9 +36,7 @@ void drawSystem(Registry &r) {
     }
 }
 
-void positionSystem(Registry &r) {
-    SparseArray<component::position_s> &positions = r.getComponents<component::position_s>();
-    SparseArray<component::drawable_s> &sprite = r.getComponents<component::drawable_s>();
+void positionSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::drawable_s> &sprite) {
     for (size_t i = 0; i < positions.size() && i < sprite.size(); i++) {
         std::optional<component::drawable_s> &sprt = sprite[i];
         std::optional<component::position_s> &pos = positions[i];
