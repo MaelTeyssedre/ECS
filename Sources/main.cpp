@@ -5,34 +5,54 @@
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
+    // * Registry
     Registry registry(1);
-    component::position_s pos = {50, 50};
-    component::velocity_s vel = {1, 1};
+    // * Components creation
+    component::position_s pos {50, 50};
+    component::velocity_s vel {1, 1};
     component::drawable_s sprite;
     sprite.texture.loadFromFile("../canard.png");
     sprite.sprite.setTexture(sprite.texture, true);
     sprite.window = &window;
     sprite.sprite.setPosition(sf::Vector2f((float)pos.x, (float)pos.y));
     sprite.sprite.setScale((float)0.3, (float)0.3);
-    component::controllable_s ctrl = {true};
-    registry.registerComponent<component::position_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
-    registry.registerComponent<component::velocity_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
-    registry.registerComponent<component::drawable_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
-    registry.registerComponent<component::controllable_s>([](Registry &, Entity const &){}, [](Registry &, Entity const &){});
+    component::controllable_s ctrl {true};
+    // * RegisterComponent
+    registry.registerComponent<component::position_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
+    registry.registerComponent<component::velocity_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
+    registry.registerComponent<component::drawable_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
+    registry.registerComponent<component::controllable_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
+    // * AddComponent
     registry.addComponent<component::position_s>(registry.entityFromIndex(0), std::move(pos));
     registry.addComponent<component::velocity_s>(registry.entityFromIndex(0), std::move(vel));
     registry.addComponent<component::controllable_s>(registry.entityFromIndex(0), std::move(ctrl));
     registry.addComponent<component::drawable_s>(registry.entityFromIndex(0), std::move(sprite));
+    // * addSystem
+    // registry.add_system<component::position_s, component::velocity_s>([](Registry &registry) -> void {
+    //         SparseArray<component::position_s> &positions {registry.getComponents<component::position_s>()};
+    //         SparseArray<component::velocity_s> &velocities {registry.getComponents<component::velocity_s>()};
+    //         for (size_t i = 0; i < positions.size() && i < velocities.size(); i++) {
+    //             const std::optional<component::position_s> &pos {positions[i]};
+    //             const std::optional<component::velocity_s> &vel {velocities[i]};
+    //             if (pos && vel)
+    //                 std::cerr << i << ": Position = { " << pos.value().x << ", " << pos.value().y << " }, Velocity = { " << vel.value().vx << ", " << vel.value().vy << " }" << std::endl;
+    //         }
+    // });
+    // registry.add_system(positionSystem);
+    // registry.add_system(controlSystem);
+    // registry.add_system(drawSystem);
+    // * mainLoop
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event))
             if (event.type == sf::Event::Closed)
                 window.close();
         window.clear(sf::Color::Black);
-        logging_system(registry);
-        control_system(registry);
-        position_system(registry);
-        draw_system(registry);
+        // registry.run_system();
+        loggingSystem(registry);
+        positionSystem(registry);
+        controlSystem(registry);
+        drawSystem(registry);
         window.display();
     }
     return 0;

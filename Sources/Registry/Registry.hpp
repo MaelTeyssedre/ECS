@@ -18,6 +18,7 @@
             Entity spawnEntity();
             Entity entityFromIndex(size_t idx);
             void killEntity(Entity const &e);
+            void run_system();
         public:
             template <class Component>
             SparseArray<Component> &registerComponent(std::function<void(Registry &, Entity const &)> constructor, std::function<void(Registry &, Entity const &)> destructor) {
@@ -49,14 +50,21 @@
 
             template <typename Component>
             void removeComponent(Entity const &from) {
-                SparseArray<Component> array = std::any_cast<SparseArray<Component>>(_componentsArrays[std::type_index(typeid(Component))]);
+                auto array = std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))]);
                 array.erase(from);
             }
+
+            template <class... Components, typename Function>
+            void add_system(Function &&f) {}
+
+            template <class... Components, typename Function>
+            void add_system(Function const &f) {}
 
         private:
             std::map<std::type_index, std::function<void(Registry &, Entity const &)>> _constructorArray;
             std::map<std::type_index, std::function<void(Registry &, Entity const &)>> _destructorArray;
             std::map<std::type_index, std::any> _componentsArrays;
+            std::vector<std::function<void(Registry &)>> _systems;
             size_t _entities;
             std::vector<Entity> _killedEntities;
     };

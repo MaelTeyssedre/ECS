@@ -42,3 +42,8 @@ bool Registry::isKilled(Entity const &e) {
             return true;
     return false;
 }
+
+void Registry::run_system() {
+    for (auto i = 0; i < _systems.size(); i++)
+        _systems[i](*this);
+}

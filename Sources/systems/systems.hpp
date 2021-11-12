@@ -1,11 +1,6 @@
-#ifndef SYSTEMS_HPP_
-    #define SYSTEMS_HPP_
+#include "Registry.hpp"
 
-    class Registry;
-
-    void logging_system(Registry &r);
-    void position_system(Registry &r);
-    void draw_system(Registry &r);
-    void control_system(Registry &r);
-
-#endif /* !SYSTEMS_HPP_ */
+void loggingSystem(Registry &r);
+void controlSystem(Registry &r);
+void drawSystem(Registry &r);
+void positionSystem(Registry &r);
