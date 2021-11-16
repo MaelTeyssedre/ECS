@@ -11,7 +11,7 @@ int main() {
     component::position_s pos {50, 50};
     component::velocity_s vel {1, 1};
     component::drawable_s sprite;
-    sprite.texture.loadFromFile("../canard.png");
+    sprite.texture.loadFromFile("./canard.png");
     sprite.sprite.setTexture(sprite.texture, true);
     sprite.window = &window;
     sprite.sprite.setPosition(sf::Vector2f((float)pos.x, (float)pos.y));

@@ -8,12 +8,12 @@ Entity Registry::spawnEntity() {
         _entities++;
         for (auto i : _componentsArrays)
             _constructorArray[i.first](*this, Entity(_entities));
-        return Entity(_entities);
+        return Entity(_entities - 1);
     }
     for (auto i : _componentsArrays)
             _constructorArray[i.first](*this, Entity(_entities));
     _killedEntities.pop_back();
-    return Entity(_killedEntities.size());
+    return Entity(_killedEntities.size() - 1);
 }
 
 Entity Registry::entityFromIndex(size_t idx) {
