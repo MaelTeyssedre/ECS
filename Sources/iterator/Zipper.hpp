@@ -9,7 +9,7 @@ class Zipper {
         using iterator = ZipperIterator<Containers...>;
         using iterator_tuple = typename iterator::iterator_tuple;
         
-        Zipper(Containers &...cs) {
+        Zipper(Containers &... cs) {
 
         };
 

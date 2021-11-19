@@ -19,7 +19,7 @@
             using pointer = void;
             using difference_type = size_t;
             using iterator_category = std::forward_iterator_tag;
-            using iterator_tuple = std::tuple<iterator_t<Container>...>;
+            using iterator_tuple = std::tuple<iterator_t<Containers>...>;
 
             friend containers::Zipper<Containers...>
             ZipperIterator(iterator_tuple const &it_tuple, size_t max) {
@@ -35,7 +35,7 @@
 
             }
 
-            ZipperIterator &operator++(int) {
+            ZipperIterator &operator++(int n) {
 
             }
 
@@ -58,17 +58,17 @@
         private:
             template <size_t ...Is>
             void incrAll(std::index_sequence<Is...>) {
-
+                ((++(std::get<Is>(_current))), ...);
             }
 
             template <size_t ...Is>
-            void allSet(std::index_sequence<Is...>) {
-
+            bool allSet(std::index_sequence<Is...>) {
+                return (*(std::get<Is>(_current)));
             }
-        
+
             template <size_t ...Is>
             value_type to_value(std::index_sequence<Is...>) {
-
+                
             }
 
         private:
