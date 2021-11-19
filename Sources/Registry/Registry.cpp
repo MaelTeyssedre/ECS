@@ -44,6 +44,7 @@ bool Registry::isKilled(Entity const &e) {
 }
 
 void Registry::run_system() {
-    for (size_t i = 0; i < _systems.size(); i++)
+
+    for (size_t i = 0; i < _systems.size(); i++) // update le temps à chaque tour pour passer le temps écoulé
         _systems[i](*this);
 }
