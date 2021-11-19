@@ -21,7 +21,7 @@
             using iterator_category = std::forward_iterator_tag;
             using iterator_tuple = std::tuple<iterator_t<Container>...>;
 
-            friend containers::zipper<Containers...>;
+            friend containers::Zipper<Containers...>
             ZipperIterator(iterator_tuple const &it_tuple, size_t max) {
 
             }
