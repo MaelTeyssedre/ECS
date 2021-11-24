@@ -3,6 +3,7 @@
 
     #include <iterator>
     #include <utility>
+    #include "Zipper.hpp"
     #include <vector>
 
     template <class ...Containers>
@@ -21,54 +22,59 @@
             using iterator_category = std::forward_iterator_tag;
             using iterator_tuple = std::tuple<iterator_t<Containers>...>;
 
-            friend containers::Zipper<Containers...>
-            ZipperIterator(iterator_tuple const &it_tuple, size_t max) {
-
+            friend Zipper<Containers...>;
+            ZipperIterator(iterator_tuple const &it_tuple, size_t max) 
+                : _current(it_tuple), _max(max), _idx(0) {
+                if (!allSet(seq))
+                    incrAll(seq);
             }
 
         public:
-            ZipperIterator(ZipperIterator const &z) {
-
-            }
+            ZipperIterator(ZipperIterator const &z)
+                : _current(z._current), _max(z.max), _idx(z.idx) {}
 
             ZipperIterator operator++() {
-
+                incrall(std::index_sequence<seq>);
+                return *this;
             }
 
-            ZipperIterator &operator++(int n) {
-
+            ZipperIterator &operator++(int) {
+                auto cpy = *this;
+                incrall(std::index_sequence<seq>);
+                return cpy;
             }
 
             value_type operator*() {
-
+                return toValue(seq);
             }
 
             value_type operator->() {
-                
+                return toValue(seq);
             }
 
             friend bool operator==(ZipperIterator const &lhs, ZipperIterator const &rhs) {
-                
+                return lhs._current == rhs._current;
             }
 
             friend bool operator!=(ZipperIterator const &lhs, ZipperIterator const &rhs) {
-
+                return lhs._current != rhs._current;
             }
-        
+
         private:
             template <size_t ...Is>
             void incrAll(std::index_sequence<Is...>) {
-                ((++(std::get<Is>(_current))), ...);
+                for (; _idx < _max && allSet(_seq); _idx++)
+                    ((++(std::get<Is>(_current))), ...);
             }
 
             template <size_t ...Is>
             bool allSet(std::index_sequence<Is...>) {
-                return (*(std::get<Is>(_current)));
+                return (true && ... && *std::get<Is>(_current));
             }
 
             template <size_t ...Is>
-            value_type to_value(std::index_sequence<Is...>) {
-                
+            value_type toValue(std::index_sequence<Is...>) {
+                return std::tie((*std::get<Is>(_current)).value()...);
             }
 
         private:

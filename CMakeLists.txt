@@ -15,5 +15,7 @@ target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/Sp
 target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/Registry/)
 target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/)
 target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/components/)
-target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/systems)
+target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/systems/)
+target_include_directories(rtype_sources PUBLIC ${PROJECT_SOURCE_DIR}/Sources/iterator/)
+
 target_link_libraries(rtype_sources ${CONAN_LIBS})

@@ -9,6 +9,7 @@
 
     #include "Registry.hpp"
     #include "components.hpp"
+    #include "Zipper.hpp"
 
     /**
      * \fn void loggingSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::velocity_s> &velocities)
@@ -20,13 +21,8 @@
      * \param velocities Reference to an array of velocity component
      */
     void loggingSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::velocity_s> &velocities) {
-        (void)r;
-        for (size_t i = 0; i < positions.size() && i < velocities.size(); i++) {
-            const std::optional<component::position_s> &pos = positions[i];
-            const std::optional<component::velocity_s> &vel = velocities[i];
-            if (pos && vel)
-                std::cerr << i << ": Position = { " << pos.value().x << ", " << pos.value().y << " }, Velocity = { " << vel.value().vx << ", " << vel.value().vy << " }" << std::endl;
-        }
+        for (auto &&[pos, vel] : Zipper(positions, velocities))
+            std::cerr << "Position = {" << pos.value().x << ", " << pos.value().y << "}, Velocity = {" << vel.value().vx << ", " << vel.value().vy << "}" << std::endl;
     }
 
     /**
