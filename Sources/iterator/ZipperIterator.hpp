@@ -3,8 +3,9 @@
 
     #include <iterator>
     #include <utility>
-    #include "Zipper.hpp"
     #include <vector>
+
+    template <class ...Containers> class Zipper;
 
     template <class ...Containers>
     class ZipperIterator {
@@ -15,65 +16,71 @@
         using it_reference_t = typename iterator_t<Container>::reference;
 
         public:
-            using value_type = std::tuple<decltype(std::declval<it_reference_t<Container>>().value())&...>;
+            using value_type = std::tuple<decltype(std::declval<it_reference_t<Containers>>().value())&...>;
             using reference = value_type;
             using pointer = void;
             using difference_type = size_t;
-            using iterator_category = std::forward_iterator_tag;
+            using iterator_category = std::input_iterator_tag;
             using iterator_tuple = std::tuple<iterator_t<Containers>...>;
 
             friend Zipper<Containers...>;
             ZipperIterator(iterator_tuple const &it_tuple, size_t max) 
                 : _current(it_tuple), _max(max), _idx(0) {
-                if (!allSet(seq))
-                    incrAll(seq);
+                if (_idx < _max && !allSet(_seq))
+                    incrAll(_seq);
             }
 
         public:
             ZipperIterator(ZipperIterator const &z)
-                : _current(z._current), _max(z.max), _idx(z.idx) {}
+                : _current(z._current), _max(z._max), _idx(z._idx) {}
 
-            ZipperIterator operator++() {
-                incrall(std::index_sequence<seq>);
+            auto operator++() -> ZipperIterator {
+                incrAll(_seq);
                 return *this;
             }
 
-            ZipperIterator &operator++(int) {
+            auto operator++(int) -> ZipperIterator& {
                 auto cpy = *this;
-                incrall(std::index_sequence<seq>);
+                incrAll(_seq);
                 return cpy;
             }
 
-            value_type operator*() {
-                return toValue(seq);
+            auto operator*() -> value_type {
+                return toValue(_seq);
             }
 
-            value_type operator->() {
-                return toValue(seq);
+            auto operator->() -> value_type {
+                return toValue(_seq);
             }
 
-            friend bool operator==(ZipperIterator const &lhs, ZipperIterator const &rhs) {
+            friend auto operator==(ZipperIterator const &lhs, ZipperIterator const &rhs) -> bool
+            {
                 return lhs._current == rhs._current;
             }
 
-            friend bool operator!=(ZipperIterator const &lhs, ZipperIterator const &rhs) {
+            friend auto operator!=(ZipperIterator const &lhs, ZipperIterator const &rhs) -> bool
+            {
                 return lhs._current != rhs._current;
             }
 
         private:
             template <size_t ...Is>
-            void incrAll(std::index_sequence<Is...>) {
-                for (; _idx < _max && allSet(_seq); _idx++)
+            auto incrAll(std::index_sequence<Is...>) -> void
+            {
+                do {
                     ((++(std::get<Is>(_current))), ...);
+                    _idx++;
+                } while (_idx < _max && !allSet(_seq));
             }
 
             template <size_t ...Is>
-            bool allSet(std::index_sequence<Is...>) {
+            auto allSet(std::index_sequence<Is...>) -> bool
+            {
                 return (true && ... && *std::get<Is>(_current));
             }
 
             template <size_t ...Is>
-            value_type toValue(std::index_sequence<Is...>) {
+            auto toValue(std::index_sequence<Is...>) -> value_type {
                 return std::tie((*std::get<Is>(_current)).value()...);
             }
 
@@ -83,7 +90,6 @@
             size_t _idx;
 
             static constexpr std::index_sequence_for<Containers ...> _seq{};
-
     };
 
 #endif /* !ZIPPERITERATOR_HPP_ */

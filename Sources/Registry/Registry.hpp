@@ -44,7 +44,7 @@
 
         public:
             /**
-             * \fn bool isKilled(Entity const &e)
+             * \fn auto isKilled(Entity const &e) -> bool
              * 
              * \brief boolean function to know if an entity is already killed
              *
@@ -52,19 +52,19 @@
              * 
              * \return true if e is already killed, false otherwise
              */
-            bool isKilled(Entity const &e);
+            auto isKilled(Entity const &e) -> bool;
 
             /**
-             * \fn Entity spawnEntity()
+             * \fn auto spawnEntity() -> Entity
              * 
              * \brief create a new entity
              *
              * \return the new entity
              */
-            Entity spawnEntity();
+            auto spawnEntity() -> Entity;
 
             /**
-             * \fn Entity entityFromIndex(size_t idx)
+             * \fn auto entityFromIndex(size_t idx) -> Entity
              * 
              * \brief getter of an entity from his index
              *
@@ -72,28 +72,42 @@
              * 
              * \return the entity at the specified index
              */
-            Entity entityFromIndex(size_t idx);
+            auto entityFromIndex(size_t idx) -> Entity;
 
             /**
-             * \fn void killEntity(Entity const &e)
+             * \fn auto killEntity(Entity const& e) -> void
              * 
              * \brief kill an intity
              *
              * \param e entity we want to kill
              */
-            void killEntity(Entity const &e);
+            auto killEntity(Entity const& e) -> void
+            {
+                if (isKilled(e))
+                    throw std::invalid_argument("entity already killed");
+                if (e < _entities && !isKilled(e))
+                {
+
+                    _killedEntities.push_back(e);
+                    for (auto i : _componentsArrays) {
+                        _destructorArray[i.first](*this, Entity(e));
+                    }
+                }
+                if (e >= _entities)
+                    throw std::invalid_argument("entity doesn't exist");
+            }
 
             /**
-             * \fn void run_system()
+             * \fn auto run_system() -> void
              * 
              * \brief run all the systems in the order they are stocked
              */
-            void run_system();
+            auto run_system() -> void;
 
         public:
 
             /**
-             * \fn template <class Component> SparseArray<Component> &registerComponent(std::function<void(Registry &, Entity const &)> constructor, std::function<void(Registry &, Entity const &)> destructor)
+             * \fn template <class Component> auto registerComponent(std::function<void(Registry &, Entity const &)> constructor, std::function<void(Registry &, Entity const &)> destructor) -> SparseArray<Component>&
              * 
              * \brief register a component in the registry
              *
@@ -105,7 +119,8 @@
              * \return reference to the sparseArray of the component
              */
             template <class Component>
-            SparseArray<Component> &registerComponent(std::function<void(Registry &, Entity const &)> constructor, std::function<void(Registry &, Entity const &)> destructor) {
+            auto registerComponent(std::function<void(Registry &, Entity const &)> constructor, std::function<void(Registry &, Entity const &)> destructor) -> SparseArray<Component>&
+            {
                 _componentsArrays.try_emplace(std::type_index(typeid(Component)), std::make_any<SparseArray<Component>>(_entities));
                 _constructorArray.insert(std::make_pair(std::type_index(typeid(Component)), constructor));
                 _destructorArray.insert(std::make_pair(std::type_index(typeid(Component)), destructor));
@@ -113,7 +128,7 @@
             }
 
             /**
-             * \fn template <class Component> SparseArray<Component> &getComponents()
+             * \fn template <class Component> auto getComponents() -> SparseArray<Component>&
              * 
              * \brief getter for sparseArray of the component
              * 
@@ -122,12 +137,14 @@
              * \return reference to the SparseArray of the component type 
              */
             template <class Component>
-            SparseArray<Component> &getComponents() {
+            auto getComponents() -> SparseArray<Component>&
+            {
                 return std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))]);
             }
 
             /**
-             * \fn template <class Component> SparseArray<Component> const &getComponents() const
+             * \fn template <class Component> auto getComponents() const -> SparseArray<Component> const&
+            {
              * 
              * \brief getter for sparseArray of the component
              * 
@@ -136,7 +153,8 @@
              * \return constant reference to the SparseArray of the component type 
              */
             template <class Component>
-            SparseArray<Component> const &getComponents() const {
+            auto getComponents() const -> SparseArray<Component> const&
+            {
                 return std::any_cast<SparseArray<Component> const &>(_componentsArrays.at(std::type_index(typeid(Component))));
             }
 
@@ -153,12 +171,15 @@
              * \return reference to the sparseArray that contain the moved component
              */
             template <typename Component>
-            typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c) {
+            auto addComponent(Entity const &to, Component &&c) -> typename SparseArray<Component>::reference_type
+            {
+                if ((size_t)to > (std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))])).size())
+                    (std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))])).extend((size_t)to - (std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))])).size());
                 return (std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))])).insertAt(to, c);
             }
 
             /**
-             * \fn template <typename Component, typename ...Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, Params &&...p)
+             * \fn template <typename Component, typename ...Params> auto emplaceComponent(Entity const &to, Params &&...p) -> typename SparseArray<Component>::reference_type
              * 
              * \brief create a component for an specified entity
              * 
@@ -171,12 +192,15 @@
              * \return reference to the SparseArray containing the created component
              */
             template <typename Component, typename ...Params>
-            typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, Params &&...p) {
+            auto emplaceComponent(Entity const &to, Params &&...p) -> typename SparseArray<Component>::reference_type {
+                SparseArray<Component> &tmp = std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))]);
+                if ((size_t)to < tmp.size())
+                    tmp.extend(tmp.size() - (size_t)to);
                 return (std::any_cast<SparseArray<Component>>(_componentsArrays[std::type_index(typeid(Component))])).emplaceAt(to, p...);
             }
 
             /**
-             * \fn template <typename Component> void removeComponent(Entity const &from)
+             * \fn template <typename Component> auto removeComponent(Entity const &from) -> void
              * 
              * \brief remove a component of an entity
              * 
@@ -185,13 +209,13 @@
              * \param from constant reference to the entity where the component will be removed
              */
             template <typename Component>
-            void removeComponent(Entity const &from) {
+            auto removeComponent(Entity const &from) -> void {
                 auto array = std::any_cast<SparseArray<Component> &>(_componentsArrays[std::type_index(typeid(Component))]);
                 array.erase(from);
             }
 
             /**
-             * \fn template <typename Function, class ...Components> void addSystem(Function &&f, Components &&...components)
+             * \fn template <typename Function, class ...Components> auto addSystem(Function &&f, Components &&...components) -> void
              * 
              * \brief add a system the registry
              * 
@@ -202,14 +226,14 @@
              * \param components universal reference of a variadic template for arguments taken by the function moved previously
              */
             template <typename Function, class ...Components>
-            void addSystem(Function &&f, Components &&...components) {
+            auto addSystem(Function &&f, Components &&...components) -> void {
                 _systems.push_back([&f, &components...](Registry &r) -> void {
                     f(r, components...);
                 });
             }
 
             /**
-             * \fn template <typename Function, class ...Components> void addSystem(Function const &f, Components &...components)
+             * \fn template <typename Function, class ...Components> auto addSystem(Function const &f, Components &...components) -> void
              * 
              * \brief add a system the registry
              * 
@@ -220,7 +244,7 @@
              * \param components variadic template for arguments taken by the function passed previously
              */
             template <typename Function, class ...Components>
-            void addSystem(Function const &f, Components &...components) {
+            auto addSystem(Function const &f, Components &...components) -> void{
                 _systems.push_back([&f, &components...](Registry &r) -> void {
                     f(r, components...);
                 });

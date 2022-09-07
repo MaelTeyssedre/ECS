@@ -10,6 +10,8 @@
     #include <stddef.h>
 
     /**
+     * \class Registry
+     * 
      * \brief declaration of class registry to avoid circular includes...
      */
     class Registry;

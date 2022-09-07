@@ -21,8 +21,9 @@
      * \param velocities Reference to an array of velocity component
      */
     void loggingSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::velocity_s> &velocities) {
+        (void)r;
         for (auto &&[pos, vel] : Zipper(positions, velocities))
-            std::cerr << "Position = {" << pos.value().x << ", " << pos.value().y << "}, Velocity = {" << vel.value().vx << ", " << vel.value().vy << "}" << std::endl;
+            std::cerr << "Position = {" << pos.x << ", " << pos.y << "}, Velocity = {" << vel.vx << ", " << vel.vy << "}" << std::endl;
     }
 
     /**

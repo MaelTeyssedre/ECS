@@ -84,19 +84,20 @@
             virtual ~SparseArray() = default;
 
             /**
-             * \fn void extend(size_t size)
+             * \fn auto extend(size_t size) -> void
              * 
              * \brief Extend the number of entity
              *
              * \param size number of entity to add
              */
-            void extend(size_t size) {
-                for (auto i = 0; i < size; i++)
+            auto extend(size_t size) -> void
+            {
+                for (size_t i = 0; i < size; i++)
                     _data.push_back(std::nullopt);
             }
 
             /**
-             * \fn SparseArray &operator=(SparseArray const &sparseArray)
+             * \fn auto operator=(SparseArray const &sparseArray) -> SparseArray&
              * 
              * \brief copy assignation operator
              *
@@ -104,7 +105,8 @@
              * 
              * \return Reference to the assigned SparseArray
              */
-            SparseArray &operator=(SparseArray const &sparseArray) {
+            auto operator=(SparseArray const &sparseArray) -> SparseArray&
+            {
                 std::swap(_data, sparseArray._data);
                 return *this;
             }
@@ -118,13 +120,14 @@
              * 
              * \return Reference to the assigned SparseArray
              */
-            SparseArray &operator=(SparseArray &&sparceArray) noexcept {
-                _data = std::move(sparceArray._data);
+            SparseArray& operator=(SparseArray const &&sparseArray) noexcept
+            {
+                _data = std::move(sparseArray._data);
                 return *this;
             }
 
             /**
-             * \fn reference_type operator[](size_t idx)
+             * \fn auto operator[](size_t idx) -> reference_type
              * 
              * \brief overload of operator[] ti get the component at the index passed inside of bracket
              * 
@@ -132,12 +135,13 @@
              * 
              * \return reference to the Component at the specified index
              */
-            reference_type operator[](size_t idx) {
+            auto operator[](size_t idx) -> reference_type
+            {
                 return _data[idx];
             }
 
             /**
-             * \fn const_reference_type operator[](size_t idx) const
+             * \fn auto operator[](size_t idx) const -> const_reference_type 
              * 
              * \brief bracket operator
              *
@@ -145,89 +149,97 @@
              * 
              * \return constant reference to the value at the index passed in parameter
              */
-            const_reference_type operator[](size_t idx) const {
+            auto operator[](size_t idx) const -> const_reference_type 
+            {
                 return _data[idx];
             }
 
             /**
-             * \fn iterator begin()
+             * \fn auto begin() -> iterator
              * 
              * \brief getter for the first element
              *
              * \return iterator to the first element
              */
-            iterator begin() {
+            auto begin() -> iterator
+            {
                 return _data.begin();
             }
 
             /**
-             * \fn const_iterator begin() const
+             * \fn auto begin() const -> const_iterator
              * 
              * \brief getter for the first element
              *
              * \return constant iterator to the first element
              */
-            const_iterator begin() const {
+            auto begin() const -> const_iterator
+            {
                 return _data.begin();
             }
 
             /**
-             * \fn const_iterator cbegin() const
+             * \fn auto cbegin() const -> const_iterator
              * 
              * \brief getter for the first element
              *
              * \return constant iterator to the first element
              */
-            const_iterator cbegin() const {
+            auto cbegin() const -> const_iterator
+            {
                 return _data.cbegin();
             }
 
             /**
-             * \fn iterator end()
+             * \fn auto end() -> iterator
              * 
              * \brief getter for the last element
              *
              * \return iterator to the last element
              */
-            iterator end() {
+            auto end() -> iterator
+            {
                 return _data.end();
             }
 
             /**
-             * \fn const_iterator end() const
+             * \fn auto end() const -> const_iterator
              * 
              * \brief getter for the last element
              *
              * \return constant iterator to the last element
              */
-            const_iterator end() const {
+            auto end() const -> const_iterator
+            {
                 return _data.end();
             }
 
             /**
-             * \fn const_iterator cend() const
+             * \fn auto cend() const -> const_iterator
              * 
              * \brief getter for the last element
              *
              * \return constant iterator to the last element
              */
-            const_iterator cend() const {
+            auto cend() const -> const_iterator
+            {
                 return _data.cend();
             }
 
             /**
-             * \fn ize_type size() const
+             * \fn auto size() const -> size_type
              * 
              * \brief getter for the size of the array
              *
              * \return size of the array
              */
-            size_type size() const {
+            auto size() const -> size_type
+            {
                 return _data.size();
             }
 
             /**
-             * \fn reference_type insertAt(size_type pos, Component const &component)
+             * \fn auto insertAt(size_type pos, Component const &component) -> reference_type
              * 
              * \brief add an element to an index (entity), erase the current if it exist
              *
@@ -236,9 +248,10 @@
              * 
              * \return reference to the inserted component
              */
-            reference_type insertAt(size_type pos, Component const &component) {
+            auto insertAt(size_type pos, Component const &component) -> reference_type
+            {
                 if (pos > _data.size())
-                    throw std::invalid_argument("pos superior to SparseArray's size");
+                    throw std::invalid_argument("invalid pos in InsertAt (SparseArray)");
                 if (pos == _data.size()) {
                     _data.push_back(component);
                     return _data.back();
@@ -250,7 +263,7 @@
             }
 
             /**
-             * \fn reference_type insertAt(size_type pos, Component &&component)
+             * \fn auto insertAt(size_type pos, Component &&component) -> reference_type
              * 
              * \brief move an element to an index (entity), erase the current if it exist
              *
@@ -259,7 +272,8 @@
              * 
              * \return reference to the moved component
              */
-            reference_type insertAt(size_type pos, Component &&component) {
+            auto insertAt(size_type pos, Component &&component) -> reference_type
+            {
                 if (pos > _data.size())
                     throw std::invalid_argument("pos superior to SparseArray's size");
                 if (pos == _data.size()) {
@@ -273,7 +287,7 @@
             }
 
             /**
-             * \fn template <class... Params> reference_type emplaceAt(size_type pos, Params &&...params)
+             * \fn template <class... Params> auto emplaceAt(size_type pos, Params &&...params) -> reference_type
              * 
              * \brief create an element to an index (entity), erase the current if it exist
              *
@@ -285,7 +299,8 @@
              * \return reference to the created component
              */
             template <class... Params>
-            reference_type emplaceAt(size_type pos, Params &&...params) {
+            auto emplaceAt(size_type pos, Params &&...params) -> reference_type
+            {
                 if (pos >= _data.size())
                     throw std::invalid_argument("pos superior to SparseArray's size");
                 auto alloc = _data.get_allocator();
@@ -295,21 +310,23 @@
             }
 
             /**
-             * \fn void erase(size_type pos)
+             * \fn auto erase(size_type pos) -> void
              * 
              * \brief erase a component a the specified index
              *
              * \param pos index of the component to erase
              */
-            void erase(size_type pos) {
+            auto erase(size_type pos) -> void
+            {
                 if (pos >= _data.size())
                     throw std::invalid_argument("pos superior to SparseArray's size");
-                auto alloc = _data.get_allocator();
-                std::allocator_traits<decltype(alloc)>::destroy(alloc, std::addressof(_data[pos]));
+                //auto alloc = _data.get_allocator();
+                //std::allocator_traits<decltype(alloc)>::destroy(alloc, std::addressof(_data[pos]));
+                _data[pos].reset();
             }
 
             /**
-             * \fn size_type getIndex(value_type const &value) const
+             * \fn auto getIndex(value_type const &value) const -> size_type
              * 
              * \brief getter for the index of an entity
              * 
@@ -317,13 +334,15 @@
              * 
              * \return index of the value (entity)
              */
-            size_type getIndex(value_type const &value) const {
+            auto getIndex(value_type const &value) const -> size_type
+            {
                 auto adresse = std::addressof(value);
                 for (auto i = 0; i < _data.size(); i++)
                     if (adresse == std::addressof(_data[i]))
                         return i;
                 throw std::invalid_argument("value not found");
             }
+
         private:
             container_t _data; /*! Array of optional component */
     };
