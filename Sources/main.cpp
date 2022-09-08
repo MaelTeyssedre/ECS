@@ -6,9 +6,9 @@
 #include "systems.hpp"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
+    sf::RenderWindow window(sf::VideoMode(1800, 900), "My Window");
     // * Registry
-    Registry registry(1);
+    ecs::Registry registry(1);
     // * Components creation
     component::position_s pos {50, 50};
     component::velocity_s vel {1, 1};
@@ -20,10 +20,10 @@ int main() {
     sprite.sprite.setScale((float)0.3, (float)0.3);
     component::controllable_s ctrl {true};
     // * RegisterComponent
-    registry.registerComponent<component::position_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
-    registry.registerComponent<component::velocity_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
-    registry.registerComponent<component::drawable_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
-    registry.registerComponent<component::controllable_s>([](Registry &, Entity const &) -> void {}, [](Registry &, Entity const &) -> void {});
+    registry.registerComponent<component::position_s>([](ecs::Registry &, ecs::Entity const &) -> void {}, [](ecs::Registry &, ecs::Entity const &) -> void {});
+    registry.registerComponent<component::velocity_s>([](ecs::Registry &, ecs::Entity const &) -> void {}, [](ecs::Registry &, ecs::Entity const &) -> void {});
+    registry.registerComponent<component::drawable_s>([](ecs::Registry &, ecs::Entity const &) -> void {}, [](ecs::Registry &, ecs::Entity const &) -> void {});
+    registry.registerComponent<component::controllable_s>([](ecs::Registry &, ecs::Entity const &) -> void {}, [](ecs::Registry &, ecs::Entity const &) -> void {});
     // * AddComponent
     registry.addComponent<component::position_s>(registry.entityFromIndex(0), std::move(pos));
     registry.addComponent<component::velocity_s>(registry.entityFromIndex(0), std::move(vel));
