@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include "Entity.hpp"
 
 ecs::Entity::Entity(size_t id)

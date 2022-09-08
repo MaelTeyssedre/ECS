@@ -1,14 +1,14 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include "Registry.hpp"
+#include "ECS.hpp"
 #include "components.hpp"
 #include "systems.hpp"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1800, 900), "My Window");
     // * Registry
-    ecs::Registry registry(1);
+    ecs::Registry registry;
     // * Components creation
     component::position_s pos {50, 50};
     component::velocity_s vel {1, 1};

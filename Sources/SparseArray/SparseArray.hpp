@@ -1,9 +1,3 @@
-/**
- * \file SparseArray.hpp
- *
- * \brief file where the templated SparseArray class is defined
- */
-
 #ifndef SPARSEARRAY_HPP_
 #define SPARSEARRAY_HPP_
 
@@ -15,14 +9,6 @@
 
 namespace ecs
 {
-
-    /**
-     * \class SparseArray SparseArray.hpp
-     *
-     * \brief templated class for stocking components
-     *
-     * \tparam Component type of components stocked in the array
-     */
     template <typename Component>
     class SparseArray
     {
@@ -36,20 +22,8 @@ namespace ecs
         using const_iterator = typename container_t::const_iterator;
 
     public:
-        /**
-         * \fn SparseArray() = default
-         *
-         * \brief Default ctor
-         */
         SparseArray() = default;
 
-        /**
-         * \fn SparseArray(SparseArray const &sparceArray)
-         *
-         * \brief copy ctor
-         *
-         * \param sparceArray Constante reference to the SparseArray that will be copied
-         */
         explicit SparseArray(SparseArray const &sparceArray)
         {
             for (size_t i = 0; i < sparceArray.size(); i++)
@@ -58,202 +32,81 @@ namespace ecs
                 _data[i] = sparceArray._data[i];
         };
 
-        /**
-         * \fn SparseArray(SparseArray &&sparseArray) noexcept
-         *
-         * \brief Move Ctor
-         *
-         * \param sparseArray Universal reference to the SparseArray that will be moved
-         */
         explicit SparseArray(SparseArray &&sparseArray) noexcept
             : _data(std::move(sparseArray._data)) {}
 
-        /**
-         * \fn SparseArray(size_t nbEntity)
-         *
-         * \brief Ctor that generate a number of entity by default
-         *
-         * \param nbEntity number of entity to create
-         */
         explicit SparseArray(size_t nbEntity)
         {
             for (size_t i = 0; i < nbEntity; i++)
                 _data.push_back(std::nullopt);
         }
 
-        /**
-         * \fn ~SparseArray() = default
-         *
-         * \brief Default dtor
-         */
         virtual ~SparseArray() = default;
 
-        /**
-         * \fn auto extend(size_t size) -> void
-         *
-         * \brief Extend the number of entity
-         *
-         * \param size number of entity to add
-         */
-        auto extend(size_t size) -> void
+        void extend(size_t size)
         {
             for (size_t i = 0; i < size; i++)
                 _data.push_back(std::nullopt);
         }
 
-        /**
-         * \fn auto operator=(SparseArray const &sparseArray) -> SparseArray&
-         *
-         * \brief copy assignation operator
-         *
-         * \param sparseArray constant reference to the SparseArray that will be assigned to another
-         *
-         * \return Reference to the assigned SparseArray
-         */
-        auto operator=(SparseArray const &sparseArray) -> SparseArray &
+        SparseArray & operator=(SparseArray const &sparseArray)
         {
             std::swap(_data, sparseArray._data);
             return *this;
         }
 
-        /**
-         * \fn SparseArray &operator=(SparseArray &&sparceArray) noexcept
-         *
-         * \brief move assignation operator
-         *
-         * \param sparseArray constant reference to the SparseArray that will be moved into another
-         *
-         * \return Reference to the assigned SparseArray
-         */
         SparseArray &operator=(SparseArray const &&sparseArray) noexcept
         {
             _data = std::move(sparseArray._data);
             return *this;
         }
 
-        /**
-         * \fn auto operator[](size_t idx) -> reference_type
-         *
-         * \brief overload of operator[] ti get the component at the index passed inside of bracket
-         *
-         * \param idx index of the component you want to get
-         *
-         * \return reference to the Component at the specified index
-         */
-        auto operator[](size_t idx) -> reference_type
+        reference_type operator[](size_t idx)
         {
             return _data[idx];
         }
 
-        /**
-         * \fn auto operator[](size_t idx) const -> const_reference_type
-         *
-         * \brief bracket operator
-         *
-         * \param idx index to return
-         *
-         * \return constant reference to the value at the index passed in parameter
-         */
-        auto operator[](size_t idx) const -> const_reference_type
+        const_reference_type operator[](size_t idx) const
         {
             return _data[idx];
         }
 
-        /**
-         * \fn auto begin() -> iterator
-         *
-         * \brief getter for the first element
-         *
-         * \return iterator to the first element
-         */
-        auto begin() -> iterator
+        iterator begin()
         {
             return _data.begin();
         }
 
-        /**
-         * \fn auto begin() const -> const_iterator
-         *
-         * \brief getter for the first element
-         *
-         * \return constant iterator to the first element
-         */
-        auto begin() const -> const_iterator
+        const_iterator begin() const
         {
             return _data.begin();
         }
 
-        /**
-         * \fn auto cbegin() const -> const_iterator
-         *
-         * \brief getter for the first element
-         *
-         * \return constant iterator to the first element
-         */
-        auto cbegin() const -> const_iterator
+        const_iterator cbegin() const
         {
             return _data.cbegin();
         }
 
-        /**
-         * \fn auto end() -> iterator
-         *
-         * \brief getter for the last element
-         *
-         * \return iterator to the last element
-         */
-        auto end() -> iterator
+        iterator end()
         {
             return _data.end();
         }
 
-        /**
-         * \fn auto end() const -> const_iterator
-         *
-         * \brief getter for the last element
-         *
-         * \return constant iterator to the last element
-         */
-        auto end() const -> const_iterator
+        const_iterator end() const
         {
             return _data.end();
         }
 
-        /**
-         * \fn auto cend() const -> const_iterator
-         *
-         * \brief getter for the last element
-         *
-         * \return constant iterator to the last element
-         */
-        auto cend() const -> const_iterator
+        const_iterator cend() const
         {
             return _data.cend();
         }
 
-        /**
-         * \fn auto size() const -> size_type
-         *
-         * \brief getter for the size of the array
-         *
-         * \return size of the array
-         */
-        auto size() const -> size_type
+        size_type size() const
         {
             return _data.size();
         }
 
-        /**
-         * \fn auto insertAt(size_type pos, Component const &component) -> reference_type
-         *
-         * \brief add an element to an index (entity), erase the current if it exist
-         *
-         * \param pos position where to insert the component
-         * \param component constant reference to the component to add
-         *
-         * \return reference to the inserted component
-         */
-        auto insertAt(size_type pos, Component const &component) -> reference_type
+        reference_type insertAt(size_type pos, Component const &component)
         {
             if (pos > _data.size())
                 throw std::invalid_argument("invalid pos in InsertAt (SparseArray)");
@@ -268,17 +121,7 @@ namespace ecs
             return _data[pos];
         }
 
-        /**
-         * \fn auto insertAt(size_type pos, Component &&component) -> reference_type
-         *
-         * \brief move an element to an index (entity), erase the current if it exist
-         *
-         * \param pos position where to move the component
-         * \param component universal reference to the component to move
-         *
-         * \return reference to the moved component
-         */
-        auto insertAt(size_type pos, Component &&component) -> reference_type
+        reference_type insertAt(size_type pos, Component &&component)
         {
             if (pos > _data.size())
                 throw std::invalid_argument("pos superior to SparseArray's size");
@@ -293,20 +136,8 @@ namespace ecs
             return _data[pos];
         }
 
-        /**
-         * \fn template <class... Params> auto emplaceAt(size_type pos, Params &&...params) -> reference_type
-         *
-         * \brief create an element to an index (entity), erase the current if it exist
-         *
-         * \tparam Params pack of parameter to create the component
-         *
-         * \param pos position where to create the component
-         * \param component universal reference of a template variadic of arguments to create the component
-         *
-         * \return reference to the created component
-         */
         template <class... Params>
-        auto emplaceAt(size_type pos, Params &&...params) -> reference_type
+        reference_type emplaceAt(size_type pos, Params &&...params)
         {
             if (pos >= _data.size())
                 throw std::invalid_argument("pos superior to SparseArray's size");
@@ -316,14 +147,7 @@ namespace ecs
             return _data[pos];
         }
 
-        /**
-         * \fn auto erase(size_type pos) -> void
-         *
-         * \brief erase a component a the specified index
-         *
-         * \param pos index of the component to erase
-         */
-        auto erase(size_type pos) -> void
+        void erase(size_type pos)
         {
             if (pos >= _data.size())
                 throw std::invalid_argument("pos superior to SparseArray's size");
@@ -332,16 +156,7 @@ namespace ecs
             _data[pos].reset();
         }
 
-        /**
-         * \fn auto getIndex(value_type const &value) const -> size_type
-         *
-         * \brief getter for the index of an entity
-         *
-         * \param value constant reference to an entity by his value
-         *
-         * \return index of the value (entity)
-         */
-        auto getIndex(value_type const &value) const -> size_type
+        size_type getIndex(value_type const &value) const
         {
             auto adresse = std::addressof(value);
             for (auto i = 0; i < _data.size(); i++)
@@ -351,8 +166,8 @@ namespace ecs
         }
 
     private:
-        container_t _data; /*! Array of optional component */
+        container_t _data;
     };
 }
 
-#endif /* !SPARSEARRAY_HPP_ */
+#endif

@@ -3,7 +3,7 @@
 ecs::Registry::Registry(size_t nbEntity)
     : _entities(nbEntity) {}
 
-auto ecs::Registry::spawnEntity() -> Entity
+ecs::Entity ecs::Registry::spawnEntity()
 {
     if (_killedEntities.empty())
     {
@@ -22,7 +22,7 @@ auto ecs::Registry::spawnEntity() -> Entity
     }
 }
 
-auto ecs::Registry::entityFromIndex(size_t idx) -> Entity
+ecs::Entity ecs::Registry::entityFromIndex(size_t idx)
 {
     if (idx >= _entities)
         throw std::invalid_argument("entity doesn't exit at this index");
@@ -31,7 +31,7 @@ auto ecs::Registry::entityFromIndex(size_t idx) -> Entity
     return Entity(idx);
 }
 
-auto ecs::Registry::isKilled(Entity const &e) -> bool
+bool ecs::Registry::isKilled(Entity const &e)
 {
     for (size_t i = 0; i < _killedEntities.size(); i++)
         if ((size_t)e == (size_t)_killedEntities[i])
@@ -39,7 +39,7 @@ auto ecs::Registry::isKilled(Entity const &e) -> bool
     return false;
 }
 
-auto ecs::Registry::run_system() -> void
+void ecs::Registry::run_system()
 {
     for (size_t i = 0; i < _systems.size(); i++)
         _systems[i](*this);

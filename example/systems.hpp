@@ -7,9 +7,8 @@
 #ifndef SYSTEMS_HPP_
     #define SYSTEMS_HPP_
 
-    #include "Registry.hpp"
+    #include "ECS.hpp"
     #include "components.hpp"
-    #include "Zipper.hpp"
 
     /**
      * \fn void loggingSystem(Registry &r, SparseArray<component::position_s> &positions, SparseArray<component::velocity_s> &velocities)

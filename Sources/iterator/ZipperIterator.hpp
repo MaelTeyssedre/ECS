@@ -38,42 +38,42 @@ namespace ecs
         ZipperIterator(ZipperIterator const &z)
             : _current(z._current), _max(z._max), _idx(z._idx) {}
 
-        auto operator++() -> ZipperIterator
+        ZipperIterator operator++()
         {
             incrAll(_seq);
             return *this;
         }
 
-        auto operator++(int) -> ZipperIterator &
+        ZipperIterator & operator++(int)
         {
             auto cpy = *this;
             incrAll(_seq);
             return cpy;
         }
 
-        auto operator*() -> value_type
+        value_type operator*()
         {
             return toValue(_seq);
         }
 
-        auto operator->() -> value_type
+        value_type operator->()
         {
             return toValue(_seq);
         }
 
-        friend auto operator==(ZipperIterator const &lhs, ZipperIterator const &rhs) -> bool
+        friend bool operator==(ZipperIterator const &lhs, ZipperIterator const &rhs)
         {
             return lhs._current == rhs._current;
         }
 
-        friend auto operator!=(ZipperIterator const &lhs, ZipperIterator const &rhs) -> bool
+        friend bool operator!=(ZipperIterator const &lhs, ZipperIterator const &rhs)
         {
             return lhs._current != rhs._current;
         }
 
     private:
         template <size_t... Is>
-        auto incrAll(std::index_sequence<Is...>) -> void
+        void incrAll(std::index_sequence<Is...>)
         {
             do
             {
@@ -83,13 +83,13 @@ namespace ecs
         }
 
         template <size_t... Is>
-        auto allSet(std::index_sequence<Is...>) -> bool
+        bool allSet(std::index_sequence<Is...>)
         {
             return (true && ... && *std::get<Is>(_current));
         }
 
         template <size_t... Is>
-        auto toValue(std::index_sequence<Is...>) -> value_type
+        value_type toValue(std::index_sequence<Is...>)
         {
             return std::tie((*std::get<Is>(_current)).value()...);
         }
@@ -103,4 +103,4 @@ namespace ecs
     };
 }
 
-#endif /* !ZIPPERITERATOR_HPP_ */
+#endif

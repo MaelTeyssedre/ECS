@@ -8,7 +8,7 @@
 #define COMPONENTS_HPP_
 
 #include <SFML/Graphics.hpp>
-#include "Registry.hpp"
+#include "ECS.hpp"
 
 /**
  * \namespace component
