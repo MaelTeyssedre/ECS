@@ -1,77 +1,34 @@
-/**
- * \file components.hpp
- *
- * \brief file where all exemple components are defined
- */
-
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
 #include <SFML/Graphics.hpp>
 #include "ECS.hpp"
 
-/**
- * \namespace component
- *
- * \brief namespace for components
- */
 namespace component
 {
-    /**
-     * \struct position_s components.hpp
-     *
-     * \brief position component
-     *
-     * \param x x position of the element
-     * \param y y position of the element
-     */
-    struct position_s
+    typedef struct position_s
     {
         int x;
         int y;
-    };
+    } position_t;
 
-    /**
-     * \struct position_s components.hpp
-     *
-     * \brief velocity component
-     *
-     * \param x x velocity of the element
-     * \param y y velocity of the element
-     */
-    struct velocity_s
+    typedef struct velocity_s
     {
         int vx;
         int vy;
-    };
+    } velocity_t;
 
-    /**
-     * \struct position_s components.hpp
-     *
-     * \brief drawable component
-     *
-     * \param texture texture of the element
-     * \param sprite sprite of the element
-     * \param window RenderWindow where the component has to be draw
-     */
-    struct drawable_s
+    typedef struct drawable_s
     {
         sf::Texture texture;
         sf::Sprite sprite;
         sf::RenderWindow *window = nullptr;
-    };
+    } drawable_t;
 
-    /**
-     * \struct position_s components.hpp
-     *
-     * \brief controllable component
-     *
-     * \param isControllable boolean true if the element if controllable, false otherwise
-     */
-    struct controllable_s
+    typedef struct controllable_s
     {
         bool isControllable;
-    };
+    } controllable_t;
 }
 
-#endif /* !COMPONENTS_HPP_ */
+#endif

@@ -34,7 +34,7 @@ namespace ecs
             {
                 _killedEntities.push_back(e);
                 for (auto i : _componentsArrays)
-                    _destructorArray[i.first](*this, Entity(e));
+                    _destructorArray[i.first](*this, e);
             }
             if (e >= _entities)
                 throw std::invalid_argument("entity doesn't exist");
@@ -107,7 +107,7 @@ namespace ecs
         std::map<std::type_index, std::function<void(Registry &, Entity const &)>> _destructorArray;
         std::map<std::type_index, std::any> _componentsArrays;
         std::vector<std::function<void(Registry &)>> _systems;
-        size_t _entities;
+        size_t _entities = 0;
         std::vector<Entity> _killedEntities;
     };
 }

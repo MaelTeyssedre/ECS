@@ -151,8 +151,8 @@ namespace ecs
         {
             if (pos >= _data.size())
                 throw std::invalid_argument("pos superior to SparseArray's size");
-            // auto alloc = _data.get_allocator();
-            // std::allocator_traits<decltype(alloc)>::destroy(alloc, std::addressof(_data[pos]));
+            auto alloc = _data.get_allocator();
+            std::allocator_traits<decltype(alloc)>::destroy(alloc, std::addressof(_data[pos]));
             _data[pos].reset();
         }
 

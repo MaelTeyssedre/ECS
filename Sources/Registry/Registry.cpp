@@ -8,15 +8,15 @@ ecs::Entity ecs::Registry::spawnEntity()
     if (_killedEntities.empty())
     {
         _entities++;
-        for (auto i : _componentsArrays)
-            _constructorArray[i.first](*this, Entity(_entities));
+        for (auto it : _componentsArrays)
+            _constructorArray[it.first](*this, Entity(_entities - 1));
         return Entity(_entities - 1);
     }
     else
     {
         Entity e{_killedEntities.back()};
-        for (auto i : _componentsArrays)
-            _constructorArray[i.first](*this, e);
+        for (auto it : _componentsArrays)
+            _constructorArray[it.first](*this, e);
         _killedEntities.pop_back();
         return Entity(e);
     }
@@ -33,14 +33,14 @@ ecs::Entity ecs::Registry::entityFromIndex(size_t idx)
 
 bool ecs::Registry::isKilled(Entity const &e)
 {
-    for (size_t i = 0; i < _killedEntities.size(); i++)
-        if ((size_t)e == (size_t)_killedEntities[i])
+    for (auto it : _killedEntities)
+        if ((size_t)e == (size_t)it)
             return true;
     return false;
 }
 
 void ecs::Registry::run_system()
 {
-    for (size_t i = 0; i < _systems.size(); i++)
-        _systems[i](*this);
+    for(auto it : _systems)
+        it(*this);
 }
