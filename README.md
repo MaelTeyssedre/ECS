@@ -1,12 +1,13 @@
 # ECS
 
+
 ## Build
 
 Build the ECS (will give you a static library) :
 ```
 > ./MakeLibECS.sh
 ```
-Build the example (you must have built the ECS before and have the SFML installed) :
+Build the example (you must have built the ECS before and have the SFML lib installed) :
 ```
 > cd example
 > make
