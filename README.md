@@ -19,5 +19,5 @@ Clean everything :
 
 ## Documentation
 
-Coming soon...
+Coming soon....
 if u wanna know how it work just read the code :D
